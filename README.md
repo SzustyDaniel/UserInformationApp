@@ -11,9 +11,9 @@ it was created by me to practices implementing MVVM model and work with view lis
 
 # NuGets
 All of the NuGets used in the project and thier urls.<br/>
-| NuGet | Url |
-| --- | --- |
-| Expression.Blend.Sdk |------|
-| Extended WPF Toolkit |https://github.com/xceedsoftware/wpftoolkit|
-| FileHelpers |https://www.filehelpers.net/|
 
+| NuGet         | Url           |
+| ------------- | ------------- |
+| Expression.Blend.Sdk     | No project link |
+| Extended WPF Toolkit     | https://github.com/xceedsoftware/wpftoolkit      |
+| FileHelpers | https://www.filehelpers.net/      |
