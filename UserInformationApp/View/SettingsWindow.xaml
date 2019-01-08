@@ -1,0 +1,56 @@
+﻿<Window x:Class="UserInformationApp.View.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UserInformationApp.View"
+        mc:Ignorable="d" Name="windowSettings" WindowStartupLocation="CenterOwner" SizeToContent="WidthAndHeight" Background="{StaticResource Window.Static.Background}"
+        Title="Settings" Height="350" Width="460" DataContext="{Binding ViewModel, ElementName=windowSettings}" Closing="windowSettings_Closing" >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="75*"/>
+            <RowDefinition Height="25*"/>
+        </Grid.RowDefinitions>
+
+
+
+        <!-- Left side Text -->
+        <Grid Grid.Column="0" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="User Data Location: " Style="{StaticResource TextBlockFreeStyle}"/>
+            <TextBlock Text="Program Theme: " Grid.Row="2" Grid.Column="0" Style="{StaticResource TextBlockFreeStyle}"/>
+        </Grid>
+
+        <!-- Right Side controls -->
+        <Border BorderThickness="2" BorderBrush="Black" Grid.Column="1" Grid.Row="0" Background="{StaticResource Container.Static.Background}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <TextBox Name="txbFileUrl" Text="{Binding UsersFileUri,TargetNullValue=[No File Address Given]}" VerticalAlignment="Center"  Width="200" Style="{DynamicResource TextBoxStyle}"/>
+                    <Button Name="btnFileBrowes" Content="Browes" VerticalAlignment="Center" Command="{Binding ViewModel.GetUriCommand, ElementName=windowSettings, Mode=OneWay}" Style="{DynamicResource ButtonStyle}"/>
+                </StackPanel>
+
+                <ComboBox Grid.Row="1" Name="cmbThemeSelection" Margin="3,10" Padding="5" VerticalAlignment="Center"  Style="{StaticResource ComboBoxStyle}" ItemContainerStyle="{StaticResource ComboBoxItemStyle}"
+                      ItemsSource="{Binding ViewModel.ThemesList, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SettingsWindow}}}" SelectedItem="{Binding ViewModel.SelectedAppTheme, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SettingsWindow}}}"/>
+            </Grid>
+        </Border>
+
+        <!-- Control Buttons settings -->
+        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button Name="btnSaveSettings" Content="Save Settings" Margin="3,7" Padding="5" Command="{Binding ViewModel.SaveSettingsCommand, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SettingsWindow}}}" Style="{DynamicResource ButtonStyle}"/>
+            <Button Name="btnResetToDefaults" Content="Revert to Default" Margin="3,7" Padding="5" Command="{Binding ViewModel.RevetToDefaultsCommand, ElementName=windowSettings, Mode=OneWay}" Style="{DynamicResource ButtonStyle}"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -2,8 +2,18 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:UserInformationApp"
-             StartupUri="MainWindow.xaml">
+             xmlns:theme="clr-namespace:UserInformationApp.Resources.Themes"
+             StartupUri="View\UserInfoWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <theme:ThemesDictionary LightThemeSource="Resources\Themes\LightTheme.xaml" 
+                                        DarkThemeSource="Resources\Themes\DarkTheme.xaml"/>
+                <ResourceDictionary Source="Resources\TextStylesDictionary.xaml"/>
+                <ResourceDictionary Source="Resources\ControlStylesDictionary.xaml"/>
+                <ResourceDictionary Source="Resources\ControlStylesDictionary2.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

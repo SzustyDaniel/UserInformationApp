@@ -1,0 +1,252 @@
+﻿<Window x:Class="UserInformationApp.View.UserInfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UserInformationApp.View"
+        xmlns:convert="clr-namespace:UserInformationApp.Resources.Converters"
+         xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d" ShowInTaskbar="True" WindowStartupLocation="CenterScreen" x:Name="windowUserInfo"
+        WindowState="Maximized" Title="Users Information Details" Height="1000" Width="800" 
+        Background="{StaticResource Window.Static.Background}" Closing="windowUserInfo_Closing">
+    <Window.Resources>
+        <!-- Converter for radio buttons -->
+        <convert:EnumToBoolConverter x:Key="enumToBoolConvert"/>
+        <convert:WidthConverter x:Key="widthConverter"/>
+    </Window.Resources>
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="taskBarItem" ProgressValue="{Binding ElementName=windowUserInfo,Path=ViewModel.ProgressValue}"
+                         ProgressState="{Binding ElementName=windowUserInfo,Path=ViewModel.TaskInProgress}"/>
+    </Window.TaskbarItemInfo>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <!-- Program controls -->
+        <Grid Grid.Column="0" Background="{StaticResource ContainerSecondary.Static.Background}">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="15*"/>
+                <RowDefinition Height="15*"/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+
+            <Button Grid.Row="0" Name="btnGetUsers" Content="Get Users" ToolTip="Get Users from Database" 
+                    Command="{Binding ViewModel.GetUsersCommand, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UserInfoWindow}}}" Style="{DynamicResource ButtonStyle}"/>
+            <!-- Add User Button -->
+            <Button Grid.Row="1" Name="btnAddUser" Content="Add a User" ToolTip="Add a new user to current List"
+                    Command="{Binding ViewModel.AddUserCommand, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UserInfoWindow}}}" Style="{DynamicResource ButtonStyle}"/>
+            <!-- Edit Button -->
+            <Button Grid.Row="2"  Name="btnEditUser" Content="Edit Selected" Style="{StaticResource ButtonStyle}" Command="{Binding ViewModel.EditCommand, ElementName=windowUserInfo, Mode=OneWay}" CommandParameter="{Binding SelectedItems, ElementName=lsvUsersList}" />
+            <!-- Remove Button -->
+            <Button Grid.Row="3" Name="btnRemoveUser" Content="Remove Selected" ToolTip="Removes a selected users from the list"
+                    Command="{Binding ViewModel.RemoveUserCommand, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UserInfoWindow}}}" 
+                    CommandParameter="{Binding SelectedItems, ElementName=lsvUsersList}" Style="{DynamicResource ButtonStyle}"/>
+
+            <Button Grid.Row="4" Name="btnConfirmEtidts" Content="Confirm Changes" Style="{StaticResource ButtonStyle}"
+                    ToolTip="Any change made to the data will be saved" Command="{Binding ViewModel.SaveChangesCmd, ElementName=windowUserInfo, Mode=OneWay}"/>
+
+            <!-- Filter Location -->
+            <GroupBox Grid.Row="5" Grid.RowSpan="2" Style="{StaticResource GroupBoxFilterStyle}" Margin="5,1,5,1"
+                      Header="Filter" Name="gbFilter" DataContext="{Binding ElementName=windowUserInfo,Path=ViewModel}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <CheckBox Name="chbFirstName" Content="First Name" Grid.Row="0" Grid.Column="0" 
+                              IsChecked="{Binding ListFilter.ChbFirstName}" Style="{DynamicResource CheckBoxStyle}"/>
+                    <TextBox Name="txbFilterFirstName" Grid.Row="0" Grid.Column="1" Text="{Binding ListFilter.TxtFirstName}" 
+                             Style="{StaticResource TextBoxStyle}" GotFocus="TextBoxGotFocus" MaxWidth="150"/>
+
+                    <CheckBox Name="chbLastName" Content="Last Name" Grid.Row="1" Grid.Column="0" 
+                              Style="{DynamicResource CheckBoxStyle}" IsChecked="{Binding ListFilter.ChbLastName}"/>
+                    <TextBox Name="txbFilterLastName" Grid.Row="1" Grid.Column="1" Text="{Binding ListFilter.TxtLastName}" Style="{StaticResource TextBoxStyle}" GotFocus="TextBoxGotFocus" MaxWidth="150"/>
+
+                    <CheckBox Name="chbEmail" Content="Email" Grid.Row="2" Grid.Column="0" 
+                              Style="{DynamicResource CheckBoxStyle}" IsChecked="{Binding ListFilter.ChbEmail}"/>
+                    <TextBox Name="txbFilterEmail" Grid.Row="2" Grid.Column="1" Text="{Binding ListFilter.TxtEmail}" Style="{StaticResource TextBoxStyle}" GotFocus="TextBoxGotFocus" MaxWidth="150"/>
+
+                    <StackPanel Margin="7,3"  Orientation="Horizontal" Grid.ColumnSpan="2" Grid.Row="3">
+                        <RadioButton Name="rbtnAll" GroupName="gender" Content="All" Style="{DynamicResource FilterRadioButtonStyle}" IsChecked="{Binding ListFilter.CurrentGender,Converter={StaticResource enumToBoolConvert},ConverterParameter=All}" />
+                        <RadioButton Name="rbtnMale" GroupName="gender" Content="Male" Style="{DynamicResource FilterRadioButtonStyle}" IsChecked="{Binding ListFilter.CurrentGender,Converter={StaticResource enumToBoolConvert},ConverterParameter=Male}" />
+                        <RadioButton Name="rbtnFemale" GroupName="gender" Content="Female" Style="{DynamicResource FilterRadioButtonStyle}" IsChecked="{Binding ListFilter.CurrentGender,Converter={StaticResource enumToBoolConvert},ConverterParameter=Female}" />
+                    </StackPanel>
+
+                    <CheckBox Name="chbCountry" Content="Country" Grid.Row="4" Grid.Column="0" 
+                              Style="{DynamicResource CheckBoxStyle}" IsChecked="{Binding ListFilter.ChbCountry}"/>
+                    <TextBox Name="txbFilterCountry" Grid.Row="4" Grid.Column="1" Text="{Binding ListFilter.TxtCountry}" 
+                             Style="{StaticResource TextBoxStyle}" GotFocus="TextBoxGotFocus" MaxWidth="150"/>
+
+                    <CheckBox Name="chbCity" Content="City" Grid.Row="5" Grid.Column="0" 
+                              Style="{DynamicResource CheckBoxStyle}" IsChecked="{Binding ListFilter.ChbCity}"/>
+                    <TextBox Name="txbFilterCity" Grid.Row="5" Grid.Column="1" Text="{Binding ListFilter.TxtCity}" 
+                             Style="{StaticResource TextBoxStyle}" GotFocus="TextBoxGotFocus" MaxWidth="150"/>
+
+                    <CheckBox Name="chbStreet" Content="Street" Grid.Row="6" Grid.Column="0" 
+                              Style="{DynamicResource CheckBoxStyle}" IsChecked="{Binding ListFilter.ChbStreet}"/>
+                    <TextBox Name="txbFilterStreet" Grid.Row="6" Grid.Column="1" Text="{Binding ListFilter.TxtStreet}" 
+                             Style="{StaticResource TextBoxStyle}" GotFocus="TextBoxGotFocus" MaxWidth="150"/>
+
+                    <CheckBox Name="chbPhoneNumber" Content="Phone Number" Grid.Row="7" Grid.Column="0" 
+                              Style="{DynamicResource CheckBoxStyle}" IsChecked="{Binding ListFilter.ChbPhoneNumber}"/>
+                    <TextBox Name="txbFilterPhoneNumber" Grid.Row="7" Grid.Column="1" Text="{Binding ListFilter.TxtPhoneNumber}" Style="{StaticResource TextBoxStyle}" GotFocus="TextBoxGotFocus" MaxWidth="150"/>
+
+                    <Button Name="btnFilter" Content="Apply Filter" Grid.Row="8" Style="{StaticResource ButtonStyle}" ToolTip="Applay the filter to the list"
+                            Command="{Binding ViewModel.FilterListCmd, ElementName=windowUserInfo, Mode=OneWay}" Margin="7,10"/>
+                    <Button Name="btnClearFilter" Content="Clear Filter" Grid.Row="8" Grid.Column="1" Style="{StaticResource ButtonStyle}" ToolTip="Clear any filter on the list" 
+                            Command="{Binding ViewModel.ClearFilterCmd, ElementName=windowUserInfo, Mode=OneWay}" Margin="7,10"/>
+                </Grid>
+            </GroupBox>
+            <!--End of Filter -->
+
+            <Button Grid.Row="7" Name="btnSettings" Content="Settings"  
+                    CommandParameter="{Binding ElementName=windowUserInfo, Mode=OneWay}" ToolTip="Opens the app settings window"
+                    Command="{Binding ViewModel.OpenSettingsCommand, ElementName=windowUserInfo, Mode=OneWay}" Style="{DynamicResource ButtonStyle}"/>
+        </Grid>
+
+        <!-- User Detailed View-->
+        <xceed:BusyIndicator x:Name="biUserList" Grid.Column="1" IsBusy="{Binding ElementName=windowUserInfo,Path=ViewModel.IsBusy}"
+                             Background="{StaticResource BusyIndicator.Static.Background}">
+            <xceed:BusyIndicator.BusyContentTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="5" >
+                        <TextBlock Style="{StaticResource TextBlockBusyIndicatorStyle}" HorizontalAlignment="Center" Text="{Binding ElementName=windowUserInfo,Path=ViewModel.TaskName,Mode=OneWay}"/>
+                        <StackPanel Margin="5">
+                            <TextBlock Style="{StaticResource TextBlockBusyIndicatorStyle}" Text="{Binding ElementName=windowUserInfo,Path=ViewModel.ProgressMessage,Mode=OneWay}"/>
+                            <Grid Margin="5">
+                                <ProgressBar Name="pbBusyIndicator" Foreground="{StaticResource BusyIndicatorProgressBar.Static.Foreground}" Background="{StaticResource BusyIndicatorProgressBar.Static.Background}"
+                                             Minimum="0" Maximum="100" Value="{Binding ElementName=windowUserInfo,Path=ViewModel.ProgressPrecentage,Mode=OneWay}"/>
+                                <TextBlock HorizontalAlignment="Center" Foreground="{StaticResource BusyIndicatorProgressBarText.Static.Foreground}" 
+                                           Text="{Binding ElementName=windowUserInfo,Path=ViewModel.ProgressPrecentage,Mode=OneWay, StringFormat={}{0:0}%}"/>
+                            </Grid>
+                            <Button Content="Cancel" Style="{StaticResource ContainerButton}" Command="{Binding ElementName=windowUserInfo,Path=ViewModel.CancelTaskCommand}"
+                                    Foreground="{StaticResource IndicatorButton.Static.Foregournd}" Background="{StaticResource IndicatorButton.Static.Background}" />
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </xceed:BusyIndicator.BusyContentTemplate>
+            <xceed:BusyIndicator.OverlayStyle>
+                <Style TargetType="Rectangle">
+                    <Setter Property="Fill" Value="{StaticResource Container.Static.Background}"/>
+                </Style>
+            </xceed:BusyIndicator.OverlayStyle>
+            <xceed:BusyIndicator.ProgressBarStyle>
+                <Style TargetType="ProgressBar">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Style>
+            </xceed:BusyIndicator.ProgressBarStyle>
+            <ListView Name="lsvUsersList" Grid.Column="1" ItemsSource="{Binding ElementName=windowUserInfo,Path=ViewModel.UserList}" Background="{StaticResource Container.Static.Background}"
+                  SelectionMode="Extended" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Standard" AlternationCount="2" Style="{DynamicResource ListViewStyle}"
+                  ScrollViewer.CanContentScroll="True" ItemContainerStyle="{StaticResource listViewContainerStyle}">
+                <ListView.View>
+                    <GridView>
+                        <!-- Start of the grid look decleration -->
+                        <GridViewColumn x:Name="headerId" HeaderContainerStyle="{StaticResource listViewHeaderStyle}"
+                                   Width="{Binding ElementName=lsvUsersList,Path=ActualWidth,Converter={StaticResource widthConverter},ConverterParameter=9}">
+                            <GridViewColumnHeader Content="ID"  CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Content}" Command="{Binding ViewModel.SortListByCmd, ElementName=windowUserInfo, Mode=OneWay}"/>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding Path=ID}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource listViewHeaderStyle}" 
+                                    Width="{Binding ElementName=lsvUsersList,Path=ActualWidth,Converter={StaticResource widthConverter},ConverterParameter=9}">
+                            <GridViewColumnHeader Content="First Name"  CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Content}" Command="{Binding ViewModel.SortListByCmd, ElementName=windowUserInfo, Mode=OneWay}"/>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock  TextWrapping="Wrap" Text="{Binding Path=FirstName}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource listViewHeaderStyle}" 
+                                    Width="{Binding ElementName=lsvUsersList,Path=ActualWidth,Converter={StaticResource widthConverter},ConverterParameter=9}">
+                            <GridViewColumnHeader Content="Last Name"  CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Content}" Command="{Binding ViewModel.SortListByCmd, ElementName=windowUserInfo, Mode=OneWay}"/>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding Path=LastName}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource listViewHeaderStyle}" 
+                                    Width="{Binding ElementName=lsvUsersList,Path=ActualWidth,Converter={StaticResource widthConverter},ConverterParameter=9}">
+                            <GridViewColumnHeader Content="Email"  CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Content}" Command="{Binding ViewModel.SortListByCmd, ElementName=windowUserInfo, Mode=OneWay}"/>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding Path=Email}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource listViewHeaderStyle}" 
+                                    Width="{Binding ElementName=lsvUsersList,Path=ActualWidth,Converter={StaticResource widthConverter},ConverterParameter=9}">
+                            <GridViewColumnHeader Content="Gender"  CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Content}" Command="{Binding ViewModel.SortListByCmd, ElementName=windowUserInfo, Mode=OneWay}"/>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding Path=Gender}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource listViewHeaderStyle}" 
+                                    Width="{Binding ElementName=lsvUsersList,Path=ActualWidth,Converter={StaticResource widthConverter},ConverterParameter=9}">
+                            <GridViewColumnHeader Content="Country"  CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Content}" Command="{Binding ViewModel.SortListByCmd, ElementName=windowUserInfo, Mode=OneWay}"/>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding Path=Country}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource listViewHeaderStyle}" 
+                                    Width="{Binding ElementName=lsvUsersList,Path=ActualWidth,Converter={StaticResource widthConverter},ConverterParameter=9}">
+                            <GridViewColumnHeader Content="City"  CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Content}" Command="{Binding ViewModel.SortListByCmd, ElementName=windowUserInfo, Mode=OneWay}"/>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding Path=City}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource listViewHeaderStyle}" 
+                                    Width="{Binding ElementName=lsvUsersList,Path=ActualWidth,Converter={StaticResource widthConverter},ConverterParameter=9}">
+                            <GridViewColumnHeader Content="Street"  CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Content}" Command="{Binding ViewModel.SortListByCmd, ElementName=windowUserInfo, Mode=OneWay}"/>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding Path=Street}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn HeaderContainerStyle="{StaticResource listViewHeaderStyle}" 
+                                    Width="{Binding ElementName=lsvUsersList,Path=ActualWidth,Converter={StaticResource widthConverter},ConverterParameter=9}">
+                            <GridViewColumnHeader Content="Phone Number"  CommandParameter="{Binding RelativeSource={RelativeSource Self},Path=Content}" Command="{Binding ViewModel.SortListByCmd, ElementName=windowUserInfo, Mode=OneWay}"/>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding Path=PhoneNumber}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </xceed:BusyIndicator>
+
+    </Grid>
+</Window>

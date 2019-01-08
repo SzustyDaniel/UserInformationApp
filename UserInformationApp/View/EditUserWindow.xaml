@@ -1,0 +1,128 @@
+﻿<Window x:Class="UserInformationApp.View.EditUserWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UserInformationApp.View"
+                xmlns:rules="clr-namespace:AppData.ValidationRules;assembly=AppData"
+        xmlns:convert="clr-namespace:UserInformationApp.Resources.Converters"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+        Title="Edit User" Height="450" Width="800" x:Name="windowEditUser" Closing="windowEditUser_Closing">
+    <Window.Resources>
+        <convert:StringToBoolConverter x:Key="radioToString"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Visibility="Collapsed">
+            <ListBox Name="lsbUsersToEdit" IsSynchronizedWithCurrentItem="True" ItemsSource="{Binding ElementName=windowEditUser,Path=ViewModel.UsersToEdit}"/>
+        </StackPanel>
+
+        <Grid Grid.Column="1" Background="{StaticResource Container.Static.Background}" DataContext="{Binding ElementName=lsbUsersToEdit, Path=SelectedItem}">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="65*"/>
+                <ColumnDefinition Width="35*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="First Name: " Style="{StaticResource TextBlockDetailStyle}" Grid.Column="0" Grid.Row="0"/>
+            <TextBox Name="txbFirstName" Grid.Column="1" Grid.Row="0" Style="{StaticResource TextBoxStyle}" GotFocus="TextBoxGotFocus"
+                     Text="{Binding Path=FirstName,ValidatesOnDataErrors=True,ValidatesOnNotifyDataErrors=True}"/>
+
+            <TextBlock Text="Last Name: " Style="{StaticResource TextBlockDetailStyle}" Grid.Column="0" Grid.Row="1"/>
+            <TextBox Name="txbLastName" Grid.Column="1" Grid.Row="1" Style="{StaticResource TextBoxStyle}" GotFocus="TextBoxGotFocus"
+                     Text="{Binding Path=LastName,ValidatesOnDataErrors=True,ValidatesOnNotifyDataErrors=True}"/>
+
+            <TextBlock Text="Email: " Style="{StaticResource TextBlockDetailStyle}" Grid.Column="0" Grid.Row="2"/>
+            <TextBox Name="txbEmail" Grid.Column="1" Grid.Row="2" Style="{StaticResource TextBoxStyle}" GotFocus="TextBoxGotFocus">
+                <TextBox.Text>
+                    <Binding Path="Email" ValidatesOnDataErrors="True" ValidatesOnNotifyDataErrors="True">
+                        <Binding.ValidationRules>
+                            <rules:ValidEmailRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+
+            <TextBlock Text="Gender: " Style="{StaticResource TextBlockDetailStyle}" Grid.Column="0" Grid.Row="3"/>
+            <GroupBox x:Name="gbGender" Margin="7,0" Grid.Column="1" Grid.Row="3" Header="Gender Select" Style="{StaticResource GroupBoxStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton x:Name="rbtnMale" Content="Male" Style="{StaticResource RadioButtonStyle}"
+                                 GroupName="genderSelect" IsChecked="{Binding Path=Gender,Converter={StaticResource radioToString},ConverterParameter=Male}"/>
+                    <RadioButton x:Name="rbtnFemale" Content="Female" Style="{StaticResource RadioButtonStyle}"
+                                 GroupName="genderSelect" IsChecked="{Binding Path=Gender,Converter={StaticResource radioToString},ConverterParameter=Female}"/>
+                </StackPanel>
+            </GroupBox>
+
+            <TextBlock Text="Country: " Style="{StaticResource TextBlockDetailStyle}" Grid.Column="0" Grid.Row="4"/>
+            <TextBox Name="txbCountry" Grid.Column="1" Grid.Row="4" Style="{StaticResource TextBoxStyle}" GotFocus="TextBoxGotFocus"
+                     Text="{Binding Path=Country,ValidatesOnDataErrors=True,ValidatesOnNotifyDataErrors=True}"/>
+
+            <TextBlock Text="City: " Style="{StaticResource TextBlockDetailStyle}" Grid.Column="0" Grid.Row="5"/>
+            <TextBox Name="txbCity" Grid.Column="1" Grid.Row="5" Style="{StaticResource TextBoxStyle}" GotFocus="TextBoxGotFocus"
+                     Text="{Binding Path=City,ValidatesOnDataErrors=True,ValidatesOnNotifyDataErrors=True}"/>
+
+            <TextBlock Text="Street: " Style="{StaticResource TextBlockDetailStyle}" Grid.Column="0" Grid.Row="6"/>
+            <TextBox Name="txbStreet" Grid.Column="1" Grid.Row="6" Style="{StaticResource TextBoxStyle}" GotFocus="TextBoxGotFocus"
+                     Text="{Binding Path=Street,ValidatesOnDataErrors=True,ValidatesOnNotifyDataErrors=True}"/>
+
+            <TextBlock Text="Phone Number" Style="{StaticResource TextBlockDetailStyle}" Grid.Column="0" Grid.Row="7"/>
+            <TextBox Name="txbPhoneNumber" Grid.Column="1" Grid.Row="7" Style="{StaticResource TextBoxStyle}" GotFocus="TextBoxGotFocus">
+                <TextBox.Text>
+                    <Binding Path="PhoneNumber" ValidatesOnDataErrors="True" ValidatesOnNotifyDataErrors="True">
+                        <Binding.ValidationRules>
+                            <rules:ValidPhoneNumberRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+
+            <!-- Bottom Row Definitions -->
+            <Grid Grid.Row="8" Grid.ColumnSpan="2" Background="{StaticResource ContainerSecondary.Static.Background}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15*"/>
+                    <ColumnDefinition Width="35*"/>
+                    <ColumnDefinition Width="25*"/>
+                    <ColumnDefinition Width="25*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{Binding ElementName=windowEditUser,Path=ViewModel.TxtCurrentUserID}" TextWrapping="Wrap" 
+                           Style="{StaticResource TextBlockFreeStyle}"/>
+
+                <StackPanel x:Name="spNavigationPanel" Grid.Column="1" Orientation="Horizontal">
+                    <Button x:Name="btnFirstItem" VerticalAlignment="Center" Content="&lt;&lt;" ToolTip="Move to first user"
+                            Style="{StaticResource ContainerButton}" Command="{Binding ViewModel.NavigateFirst, ElementName=windowEditUser, Mode=OneWay}"/>
+                    <Button x:Name="btnPreviousItem" VerticalAlignment="Center" Content="&lt;" ToolTip="Move to previous user"
+                            Style="{StaticResource ContainerButton}" Command="{Binding ViewModel.NavigatePrevious, ElementName=windowEditUser, Mode=OneWay}"/>
+                    <TextBlock Text="{Binding ElementName=windowEditUser,Path=ViewModel.TxtCurrentPosition}" TextWrapping="Wrap" 
+                               VerticalAlignment="Center" Style="{StaticResource TextBlockFreeStyle}"/>
+                    <Button x:Name="btnNextItem" VerticalAlignment="Center" Content="&gt;" ToolTip="Move to next user"
+                            Style="{StaticResource ContainerButton}" Command="{Binding ViewModel.NavigateNext, ElementName=windowEditUser, Mode=OneWay}"/>
+                    <Button x:Name="btnLastItem" VerticalAlignment="Center" Content="&gt;&gt;" ToolTip="Move to last user"
+                            Style="{StaticResource ContainerButton}" Command="{Binding ViewModel.NavigateLast, ElementName=windowEditUser, Mode=OneWay}"/>
+                </StackPanel>
+
+                <Button x:Name="btnCancelEdit" Content="Cancel" Grid.Column="2" Style="{StaticResource ContainerButton}" Command="{Binding ViewModel.CancelEditCmd, ElementName=windowEditUser, Mode=OneWay}" CommandParameter="{Binding ElementName=windowEditUser, Mode=OneWay}"
+                        ToolTip="Cancel edit and close editing window"/>
+                <Button x:Name="btnConfirmEdit" Content="Confirm" Grid.Column="3" 
+                        Style="{StaticResource ContainerButton}" ToolTip="Confirm Changes and return to previous window" 
+                        Command="{Binding ViewModel.ConfirmEditCmd, ElementName=windowEditUser, Mode=OneWay}" CommandParameter="{Binding ElementName=windowEditUser, Mode=OneWay}"/>
+
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

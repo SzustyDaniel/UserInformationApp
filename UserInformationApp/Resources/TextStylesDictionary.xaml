@@ -1,0 +1,58 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:UserInformationApp.Resources">
+
+
+
+    <!-- Used for Detail window-->
+    <Style TargetType="TextBlock" x:Key="TextBlockDetailStyle">
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Margin" Value="10,5"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontFamily" Value="Calibri"/>
+        <Setter Property="Foreground" Value="{StaticResource TextBlockContainer.Static.Foreground}"/>
+    </Style>
+
+    <!-- Used for Text outside of a continer-->
+    <Style TargetType="TextBlock" x:Key="TextBlockFreeStyle">
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Margin" Value="8,4"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontFamily" Value="Calibri"/>
+        <Setter Property="Foreground" Value="{StaticResource TextBlockFreeText.Static.Foreground}"/>
+    </Style>
+
+    <!-- Used for text inside of a listbox -->
+    <Style TargetType="TextBlock" x:Key="TextBlockListBoxStyle">
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="Margin" Value="3"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontFamily" Value="Calibri"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Foreground" Value="{StaticResource TextBlockListBox.Static.Foreground}"/>
+    </Style>
+
+    <!-- Used for header Text -->
+    <Style TargetType="TextBlock" x:Key="TextBlockHeaderStyle">
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="TextDecorations" Value="Underline"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource TextBlockHeader.Static.Foreground}"/>
+    </Style>
+
+    <!-- Used for BusyIndicator -->
+    <!-- Used for Text outside of a continer-->
+    <Style TargetType="TextBlock" x:Key="TextBlockBusyIndicatorStyle">
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Margin" Value="8,4"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontFamily" Value="Calibri"/>
+        <Setter Property="Foreground" Value="{StaticResource TextBlockBusyText.Static.Foreground}"/>
+    </Style>
+
+</ResourceDictionary>
